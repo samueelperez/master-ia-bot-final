@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
+      - ./.env
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - ENVIRONMENT=${ENVIRONMENT}
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app/backend
+      - ./logs:/app/logs
+
+  webapp:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./.env
+    environment:
+      - NEXT_PUBLIC_API_URL=${BACKEND_URL}
+    volumes:
+      - ./webapp:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+
+  ai-module:
+    build:
+      context: .
+      dockerfile: ai-module/Dockerfile
+    ports:
+      - "9004:9004"
+    env_file:
+      - ./.env
+      - ./.env
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./ai-module:/app/ai-module
+      - ./logs:/app/logs
+    depends_on:
+      - db
+
+  external-data-service:
+    build:
+      context: .
+      dockerfile: external-data-service/Dockerfile
+    ports:
+      - "9005:9005"
+    env_file:
+      - ./.env
+      - ./.env
+    volumes:
+      - ./external-data-service:/app/external-data-service
+    depends_on:
+      - db
+
+  telegram-bot:
+    build:
+      context: ./src/telegram-bot
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+      - ./.env
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - AI_MODULE_URL=${AI_MODULE_URL}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./src/telegram-bot:/app
+      - ./logs:/app/logs
+    depends_on:
+      - db
+      - ai-module
+
+  db:
+    image: postgres:14
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=crypto_bot
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:

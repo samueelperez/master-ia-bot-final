@@ -1,0 +1,29 @@
+# ============================================
+# BACKEND - DEPENDENCIAS ESPECÍFICAS
+# ============================================
+
+# Dependencias compartidas
+-r common.txt
+
+# Base de datos
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+
+# Cache y colas
+redis==5.0.1
+celery==5.3.4
+
+# Trading y análisis técnico
+ta==0.10.2
+ccxt==4.1.65
+yfinance==0.2.28
+
+# Telegram Bot
+aiogram==3.2.0
+
+# ML/AI (si se usan en backend)
+faiss-cpu==1.7.4
+# pinecone-client==2.2.4
+
+# Sistema y monitoreo
+psutil==5.9.5

@@ -1,0 +1,83 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile.railway"
+
+[deploy]
+startCommand = "docker-compose -f docker-compose.railway.yml up"
+healthcheckPath = "/health"
+healthcheckTimeout = 300
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[environments.production]
+NODE_ENV = "production"
+ENVIRONMENT = "production"
+LOG_LEVEL = "WARNING"
+
+[environments.staging]
+NODE_ENV = "staging"
+ENVIRONMENT = "staging"
+LOG_LEVEL = "INFO"
+
+# Configuración de servicios
+[services]
+# Base de datos
+[services.postgres]
+type = "postgresql"
+version = "15"
+
+# Redis
+[services.redis]
+type = "redis"
+version = "7"
+
+# Variables de entorno requeridas
+[env]
+# API Keys (OBLIGATORIAS)
+OPENAI_API_KEY = "your-openai-api-key-here"
+TELEGRAM_BOT_TOKEN = "your-telegram-bot-token-here"
+API_SECRET_KEY = "your-secure-secret-key-32-chars-min"
+BACKEND_API_SECRET_KEY = "your-backend-secret-key-32-chars-min"
+DATA_SERVICE_SECRET_KEY = "your-data-service-secret-key-32-chars-min"
+
+# Base de datos
+POSTGRES_USER = "crypto_bot"
+POSTGRES_PASSWORD = "secure_password_123"
+POSTGRES_DB = "crypto_bot_db"
+REDIS_PASSWORD = "redis_password_123"
+
+# URLs públicas
+NEXT_PUBLIC_API_URL = ""
+NEXT_PUBLIC_AI_MODULE_URL = ""
+
+# Configuración de usuarios
+TELEGRAM_AUTHORIZED_USERS = "your_telegram_user_id"
+TELEGRAM_ADMIN_USERS = "your_telegram_user_id"
+
+# Configuración de verificación de referidos
+REQUIRE_REFERRAL_VERIFICATION = "false"
+VERIFICATION_DB = "user_verification.db"
+MEMORY_DB = "telegram_bot_memory_secure.db"
+
+# API Keys externas (opcionales)
+NEWS_API_KEY = "your-news-api-key"
+TWITTER_API_KEY = "your-twitter-api-key"
+TWITTER_API_SECRET = "your-twitter-api-secret"
+TWITTER_BEARER_TOKEN = "your-twitter-bearer-token"
+ECONOMIC_CALENDAR_API_KEY = "your_economic_calendar_api_key"
+HF_TOKEN = "your-huggingface-token"
+
+# Configuración de rate limiting
+RATE_LIMIT_PER_MINUTE = "60"
+RATE_LIMIT_PER_HOUR = "1000"
+BACKEND_RATE_LIMIT_PER_MINUTE = "60"
+BACKEND_RATE_LIMIT_PER_HOUR = "1000"
+TELEGRAM_RATE_LIMIT_PER_MINUTE = "30"
+TELEGRAM_RATE_LIMIT_PER_HOUR = "300"
+
+# Configuración de CORS
+ALLOWED_ORIGINS = "*"
+ALLOWED_HOSTS = "*"
+BACKEND_ALLOWED_ORIGINS = "*"
+BACKEND_ALLOWED_HOSTS = "*"
+BACKEND_CORS_ORIGINS = "*" 

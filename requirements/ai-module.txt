@@ -1,0 +1,21 @@
+# ============================================
+# AI MODULE - DEPENDENCIAS ESPECÍFICAS
+# ============================================
+
+# Dependencias compartidas
+-r common.txt
+
+# OpenAI y LLM
+openai==1.3.5
+
+# Vector database y búsqueda
+faiss-cpu==1.7.4
+
+# Análisis técnico y estrategias de trading
+TA-Lib==0.4.28
+pandas==2.1.3
+numpy==1.24.3
+
+# Machine Learning (opcional - solo si se usan)
+# transformers==4.35.2
+# langchain==0.0.350

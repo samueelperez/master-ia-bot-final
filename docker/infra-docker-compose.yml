@@ -1,0 +1,56 @@
+services:
+  postgres:
+    image: timescale/timescaledb:latest-pg14
+    environment:
+      POSTGRES_USER: botuser
+      POSTGRES_PASSWORD: botpass
+      POSTGRES_DB: botdb
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+
+  redis:
+    image: redis:6
+    ports: ["6379:6379"]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: ["5672:5672","15672:15672"]
+
+  influxdb:
+    image: influxdb:2.6
+    environment:
+      INFLUXDB_ADMIN_USER: admin
+      INFLUXDB_ADMIN_PASSWORD: adminpass
+    ports: ["8086:8086"]
+
+  ai-module:
+    build:
+      context: ../ai-module
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ../ai-module/.env
+    environment:
+      - DB_URL=postgresql+psycopg2://botuser:botpass@host.docker.internal:5432/botdb
+      - BACKEND_URL=${BACKEND_URL}
+      - HF_TOKEN=${HF_TOKEN}
+
+  telegram-bot:
+    build:
+      context: ../ai-module/telegram_bot_service
+      dockerfile: Dockerfile.bot
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - AI_MODULE_URL=http://ai-module:9000
+      - DB_URL=postgresql+psycopg2://botuser:botpass@host.docker.internal:5432/botdb
+      - BACKEND_URL=http://host.docker.internal:8000
+      - HF_TOKEN=${HF_TOKEN}
+    depends_on:
+      - ai-module
+
+volumes:
+  pgdata:

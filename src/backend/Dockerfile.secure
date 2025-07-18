@@ -1,0 +1,33 @@
+# Dockerfile para Backend Securizado
+FROM python:3.11-slim
+
+# Crear usuario no-root
+RUN useradd --create-home --shell /bin/bash backend
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Copiar requirements y instalar dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código fuente
+COPY . .
+
+# Crear directorio de logs
+RUN mkdir -p logs && chown backend:backend logs
+
+# Cambiar a usuario no-root
+USER backend
+
+# Exponer puerto
+EXPOSE 8001
+
+# Variables de entorno por defecto
+ENV BACKEND_API_SECRET_KEY=""
+ENV BACKEND_RATE_LIMIT_PER_MINUTE=60
+ENV BACKEND_ALLOWED_ORIGINS="http://localhost:3000"
+ENV ENABLE_DOCS=false
+
+# Comando de inicio
+CMD ["python", "main.py"]

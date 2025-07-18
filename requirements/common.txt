@@ -1,0 +1,20 @@
+# ============================================
+# DEPENDENCIAS COMPARTIDAS
+# ============================================
+# Estas dependencias son utilizadas por múltiples módulos
+# Generado automáticamente: 2025-06-19 18:40:21
+
+# Framework web y servidor
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.2
+
+# Cliente HTTP
+httpx==0.25.2
+
+# Utilidades básicas
+python-dotenv==1.0.0
+
+# Análisis de datos
+pandas==2.2.2
+numpy==1.26.4

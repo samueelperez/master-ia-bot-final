@@ -1,0 +1,108 @@
+# Archivos y directorios a ignorar en Railway
+# Optimiza el tiempo de build y reduce el tamaño de la imagen
+
+# Archivos de desarrollo local
+.env
+.env.local
+.env.development
+.env.test
+.env.secrets
+*.log
+logs/
+pids/
+backup_env/
+backup_important_files.sh
+cleanup_*.sh
+reorganize_project.sh
+configure_my_uid.sh
+update_env_references.sh
+
+# Archivos de prueba y debug
+tests/
+test_*.py
+debug_*.py
+*_test.py
+*_tests.py
+TESTING_*.md
+
+# Archivos temporales
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.sublime-*
+.atom/
+
+# Archivos de Git
+.git/
+.gitignore
+.gitattributes
+
+# Archivos de documentación local
+README_*.md
+*.md
+docs/
+
+# Archivos de configuración local
+docker-compose.yml
+docker-compose.override.yml
+docker-compose.dev.yml
+
+# Archivos de backup
+*.bak
+*.backup
+backup_*/
+
+# Archivos de caché
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Archivos de Node.js (se instalarán en el build)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Archivos de Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Archivos de datos locales
+*.db
+*.sqlite
+*.sqlite3
+faiss_index/
+models/llama3-70b/
+
+# Archivos de configuración local
+config/development/
+config/testing/
+config/examples/
+
+# Scripts de desarrollo local
+scripts/start/
+scripts/tests/
+scripts/debug_scripts/
+
+# Archivos de Docker locales
+docker/
+Dockerfile
+Dockerfile.*
+!Dockerfile.railway 

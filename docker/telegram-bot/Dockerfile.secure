@@ -1,0 +1,41 @@
+# Dockerfile para Telegram Bot Securizado
+FROM python:3.11-slim
+
+# Crear usuario no-root
+RUN useradd --create-home --shell /bin/bash telegrambot
+
+# Establecer directorio de trabajo
+WORKDIR /app
+
+# Instalar dependencias del sistema
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements y instalar dependencias
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar código fuente
+COPY . .
+
+# Crear directorios necesarios
+RUN mkdir -p logs data && chown -R telegrambot:telegrambot logs data
+
+# Cambiar a usuario no-root
+USER telegrambot
+
+# Variables de entorno por defecto
+ENV TELEGRAM_TOKEN=""
+ENV AI_MODULE_URL="http://localhost:9001"
+ENV TELEGRAM_RATE_LIMIT_PER_MINUTE=30
+ENV TELEGRAM_AUTHORIZED_USERS=""
+ENV TELEGRAM_LOG_LEVEL=INFO
+ENV MEMORY_DB="data/telegram_bot_memory_secure.db"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import sys; sys.exit(0 if True else 1)"
+
+# Comando de inicio
+CMD ["python", "-m", "core.telegram_bot"]
